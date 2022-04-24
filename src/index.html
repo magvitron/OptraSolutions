@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="//unpkg.com/d3-dsv"></script>
+<script src="//unpkg.com/index-array-by"></script>
+<script src="//unpkg.com/globe.gl"></script>
+<script src="//unpkg.com/three"></script>
 <style>
 body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
@@ -30,6 +34,7 @@ body, html {
 </style>
 </head>
 <body>
+  
 
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
@@ -63,13 +68,67 @@ body, html {
 
 <!-- Header with full-height image -->
 <header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-  <div class="w3-display-left w3-text-white" style="padding:48px">
-    <span class="w3-jumbo w3-hide-small">Optra Solutions</span><br>
-    <span class="w3-xxlarge w3-hide-large w3-hide-medium">Optra Solutions</span><br>
-    <span class="w3-large">Turning vision into value</span>
-    <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p>
-  </div> 
-  <canvas class="webgl"></canvas>
+
+  <div id="globeViz"></div>
+  <script>
+    const world = Globe({ animateIn: false })
+      (document.getElementById('globeViz'))
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+      .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png');
+
+    // Auto-rotate
+    world.controls().autoRotate = true;
+    world.controls().autoRotateSpeed = 0.35;
+
+    // Add clouds sphere
+    const CLOUDS_IMG_URL = 'clouds.png'; // from https://github.com/turban/webgl-earth
+    const CLOUDS_ALT = 0.004;
+    const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
+
+    new THREE.TextureLoader().load(CLOUDS_IMG_URL, cloudsTexture => {
+      const clouds = new THREE.Mesh(
+        new THREE.SphereBufferGeometry(world.getGlobeRadius() * (1 + CLOUDS_ALT), 75, 75),
+        new THREE.MeshPhongMaterial({ map: cloudsTexture, transparent: true })
+      );
+      world.scene().add(clouds);
+
+      (function rotateClouds() {
+        clouds.rotation.y += CLOUDS_ROTATION_SPEED * Math.PI / 180;
+        requestAnimationFrame(rotateClouds);
+      })();
+    });
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+
+
+// Toggle between showing and hiding the sidebar when clicking the menu icon
+var mySidebar = document.getElementById("mySidebar");
+
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+  } else {
+    mySidebar.style.display = 'block';
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+}
+</script>
+<div class="w3-display-left w3-text-white" style="padding:48px">
+  <span class="w3-jumbo w3-hide-small">Optra Solutions</span><br>
+  <span class="w3-xxlarge w3-hide-large w3-hide-medium">Optra Solutions</span><br>
+  <span class="w3-large">Turning vision into value</span>
+  <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p>
+</div> 
   <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
     <i class="fa fa-facebook-official w3-hover-opacity"></i>
     <i class="fa fa-instagram w3-hover-opacity"></i>
@@ -361,32 +420,7 @@ body, html {
   <p>Powered by <a href="https://en.wikipedia.org/wiki/Love" title="Love" target="_blank" class="w3-hover-text-green">love</a></p>
 </footer>
  
-<script>
-// Modal Image Gallery
-function onClick(element) {
-  document.getElementById("img01").src = element.src;
-  document.getElementById("modal01").style.display = "block";
-  var captionText = document.getElementById("caption");
-  captionText.innerHTML = element.alt;
-}
 
-
-// Toggle between showing and hiding the sidebar when clicking the menu icon
-var mySidebar = document.getElementById("mySidebar");
-
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-  } else {
-    mySidebar.style.display = 'block';
-  }
-}
-
-// Close the sidebar with the close button
-function w3_close() {
-    mySidebar.style.display = "none";
-}
-</script>
 
 </body>
 </html>
