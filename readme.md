@@ -16,7 +16,10 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
-#Videos
+# Videos
 1. https://www.youtube.com/watch?v=U29j5NiSMVQ
 2. https://www.youtube.com/watch?v=oO8Eva13OY0
 3. https://www.youtube.com/watch?v=6-v__ScXc_A
+
+# color picker
+https://huemint.com/illustration-1/
