@@ -34,22 +34,22 @@ function App() {
     const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
 
-    const grid = new THREE.GridHelper( 500, 10, 0xffffff, 0xffffff );
-    grid.material.opacity = 0.5;
-    grid.material.depthWrite = false;
-    grid.material.transparent = true;
-    test.scene.add( grid );
+    // const grid = new THREE.GridHelper( 500, 10, 0xffffff, 0xffffff );
+    // grid.material.opacity = 0.5;
+    // grid.material.depthWrite = false;
+    // grid.material.transparent = true;
+    // test.scene.add( grid );
 
 
     test.scene.background = new THREE.Color( 0xbbbbbb );
     test.scene.environment = pmremGenerator.fromScene( environment ).texture;
 
     const spotLight = new THREE.SpotLight( 0xffffff,3,2 );
-    spotLight.position.set( 50, 490, 200 );
+    spotLight.position.set( 50, 490, 40 );
     test.scene.add( spotLight );
     
     const spotLightHelper = new THREE.SpotLightHelper( spotLight );
-    // test.scene.add( spotLightHelper );
+    test.scene.add( spotLightHelper );
 
     const ktx2Loader = new KTX2Loader()
     .setTranscoderPath( 'js/libs/basis/' )
@@ -57,16 +57,20 @@ function App() {
 
     const loader = new GLTFLoader().setPath( './assets/Coffee/' );
     loader.setKTX2Loader( ktx2Loader );
-    loader.setMeshoptDecoder( MeshoptDecoder );
+    // loader.setMeshoptDecoder( MeshoptDecoder );
     loader.load( 'scene.gltf', function ( gltf ) {
 
-      gltf.scene.position.y = 8;
-
+      gltf.scene.position.y = -50;
+      // gltf.scene.position.x = 200;
+      var camera = new THREE.PerspectiveCamera(70, 
+        window.innerWidth/window.innerHeight, 0.1, 1000 ); // Specify camera type like this
+        camera.position.set(10,2.5,2.5); 
       test.scene.add( gltf.scene );
-    // insertText = new THREE.TextGeometry("GHello");
+      
+    insertText = new THREE.TextGeometry("GHello");
 
 
-      // test.scene.render();
+      test.scene.render();
 
   } );
   // const controls = new OrbitControls( camera, renderer.domElement );
@@ -92,6 +96,7 @@ function App() {
       if (test.scene) {
         // loadedModel.scene.rotation.x += 0.01;
         test.scene.rotation.y +=0.01;
+        // test.scene.rotation.z +=0.01;
         // loadedModel.scene.rotation.z += 0.01;
       }
       requestAnimationFrame(animate);
